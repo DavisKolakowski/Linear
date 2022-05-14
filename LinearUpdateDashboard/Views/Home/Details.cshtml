@@ -1,0 +1,53 @@
+﻿@model LinearUpdateDashboard.ViewModels.MarketDetailsViewModel
+<p>
+    <a asp-page="Details">Details</a>
+</p>
+<table id="iHateEverything" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DataModel[0].Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataModel[0].SpotIdentifier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataModel[0].SpotTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataModel[0].SpotFirstAir)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+    $(document).ready(function () {
+        $('#iHateEverything').DataTable({
+            "proccessing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "Home/Details/{name}",
+                type: 'POST',
+                headers: { 'RequestVerificationToken': $('@Html.AntiForgeryToken()').val() }
+            },
+            "columnDefs": [
+                {
+                    "targets": -1,
+                    "data": null,
+                    "sortable": false
+                },
+                { "name": "Id", "data": "id", "targets": 0, "visible": false },
+                { "name": "SpotIdentifier", "data": "spotIdentifier", "targets": 1 },
+                { "name": "SpotTitle", "data": "spotTitle", "targets": 2 },
+                { "name": "SpotFirstAir", "data": "spotTitle", "targets": 3 }
+            ],
+            "order": [[0, "desc"]]
+        });
+    });
+    </script>
+}

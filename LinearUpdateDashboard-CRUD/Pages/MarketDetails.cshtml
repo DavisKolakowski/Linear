@@ -1,0 +1,124 @@
+﻿@page
+@model LinearUpdateDashboard.Pages.MarketDetailsModel
+
+@{
+    ViewData["Title"] = "MarketDetails";
+}
+
+@*<h1>Details</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Spot ID
+            </th>
+            <th>
+                Spot Title
+            </th>
+            <th>
+                First Air
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@if (Model.SpotsInMarket.Count() == 0)  
+    {  
+    <tr>  
+        <td colspan="10">No Conflicts!</td>  
+    </tr>  
+}  
+else  
+{  
+@foreach (var spot in Model.SpotsInMarket) {
+                @if (spot.SpotCode != null)
+                {
+
+                    <tr>
+                        <td>
+                            @spot.SpotCode
+                        </td>
+                        <td>
+                            @spot.Name
+                        </td>
+                        <td>
+                            @foreach (var dss in spot.DistributionServerSpots.DistinctBy(s => new { s.FirstAirDate, s.Spot.Id }))
+                            {
+                                @dss?.FirstAirDate
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+}
+    </tbody>
+</table>
+<a asp-page="./MarketList">Back to List</a>*@
+<table id="myTable" class="table">
+    <thead>
+        <tr>
+            <th>
+                Spot ID
+            </th>
+            <th>
+                Spot Title
+            </th>
+            <th>
+                Fire Airtime
+            </th>
+@*            <th>
+                @Html.DisplayNameFor(model => model.SpotsInMarket[0].DistributionServerSpots.Select(dss => dss.FirstAirDate))                                     
+            </th>*@
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var spot in Model.DataModel.SpotsInMarket) {
+                @if (spot.SpotCode != null)
+                {
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => spot.SpotCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => spot.Name)
+                        </td>
+                        <td>
+                            @foreach (var dss in spot.DistributionServerSpots.DistinctBy(s => new { s.FirstAirDate, s.Spot.Id }))
+                            {
+                                @Html.DisplayFor(modelItem => dss.FirstAirDate)
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+    </tbody>
+</table>
+<a asp-page="./MarketList">Back to List</a>
+@section Scripts {
+    <script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "proccessing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "/MarketDetails?",
+                type: 'GET',
+                headers: { 'RequestVerificationToken': $('@Html.AntiForgeryToken()').val() }
+            },
+            "columnDefs": [
+                {
+                    "targets": -1,
+                    "data": null,
+                    "sortable": false
+                },
+                { "name": "SpotCode", "data": "SpotCode", "targets": 0 },
+                { "name": "Name", "data": "Name", "targets": 1 }
+                //{ "name": "FirstAirDate", "data": "FirstAirDate", "targets": 2 }
+            ],
+            "order": [[0, "desc"]]
+        });
+    });
+    </script>
+}
