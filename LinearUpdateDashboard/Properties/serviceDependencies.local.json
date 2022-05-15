@@ -1,12 +1,13 @@
 {
   "dependencies": {
-    "mssql1": {
-      "secretStore": "LocalSecretsFile",
-      "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:LinearSQLDatabase"
-    },
     "secrets2": {
       "type": "secrets.user"
+    },
+    "mssql1": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": null,
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:LinearSQLDatabase"
     }
   }
 }
