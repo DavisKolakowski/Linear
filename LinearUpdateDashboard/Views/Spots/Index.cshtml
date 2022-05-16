@@ -17,7 +17,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Markets) {
+@foreach (var item in Model.Markets) {
         <tr>
             <td>
                 @item.Name
@@ -29,6 +29,6 @@
                 <a asp-action="Details" asp-route-id="@item.Name">Details</a>
             </td>
         </tr>
-        }
+}
     </tbody>
 </table>
