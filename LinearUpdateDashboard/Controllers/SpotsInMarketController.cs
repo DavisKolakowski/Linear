@@ -62,7 +62,7 @@ namespace LinearUpdateDashboard.Controllers
                         items.SpotFirstAir = dss.FirstAirDate;
                     }
                 }
-                _model.DataModel.Add(items);
+               // _model.DataModel.Add(items);
             }
             return View();
         }
@@ -73,6 +73,7 @@ namespace LinearUpdateDashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Details(JsonResult jsonResult)
         {
+            
             var recordsTotal = _model.DataModel.Count();
             var sQuery = _model.DataModel.AsQueryable();
 

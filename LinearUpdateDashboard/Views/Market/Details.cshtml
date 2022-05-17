@@ -1,0 +1,26 @@
+﻿@using LinearUpdateDashboard.ViewModels
+@model MarketDetailsViewModelTwo
+
+<div>
+    <h1>@Model.Market.Name</h1>    
+</div>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Spot ID</th>
+                <th>Air Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var spot in Model.SpotsInMarket)
+            {
+                <tr>
+                    <td>@spot.SpotCode</td>
+                    <td>@spot.DistributionServerSpots?.OrderBy(dss=>dss.FirstAirDate)?.FirstOrDefault()?.FirstAirDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
