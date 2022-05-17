@@ -2,9 +2,13 @@
 @model MarketDetailsViewModelTwo
 
 <div>
+    <a asp-action="Index">Back</a>
+</div>
+<div>
     <h1>@Model.Market.Name</h1>    
 </div>
 
+<a asp-action="ExportMarket" asp-route-name="@Model.Market.Name">Download Table</a>
 <div>
     <table>
         <thead>
@@ -23,4 +27,8 @@
             }
         </tbody>
     </table>
+</div>
+
+<div>
+     <partial name="_Pager" for="PagingModel" />   
 </div>

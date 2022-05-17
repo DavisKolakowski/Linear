@@ -26,8 +26,17 @@ namespace LinearUpdateDashboard.Controllers
             return this.View(model);
         }
 
+        [HttpGet("Market/{name}/export")] 
+        public async Task<IActionResult> ExportMarket(string name)
+        {
+            var currentDate = DateTime.Now;
+
+            // TODO: Return the list of spots and put it in a csv file here.  Use CSVHelper or something and return the byte[] to the user in the this.File() response
+            return this.File(new byte[0], "application/octet-stream", $"{currentDate.ToString("yyyyddMM")}-{name}.csv");
+        }
+
         [HttpGet("Market/{name}")]
-        public async Task<IActionResult> Details(string name, int currentPage = 1, int numItems = 20)
+        public async Task<IActionResult> Details(string name, int currentPage = 1, int numItems = 3)
         {
             var market = await this.GetMarketByName(name);
             var model = new MarketDetailsViewModelTwo();
@@ -36,6 +45,7 @@ namespace LinearUpdateDashboard.Controllers
             model.SpotsInMarket = await this.GetSpotsByMarket(market, currentPage, numItems);
             model.PagingModel = new SpotPageModel()
             {
+                MarketName = name,
                 CurrentPage = currentPage,
                 ItemsPerPage = numItems,
                 TotalItems = spotsInMarket,

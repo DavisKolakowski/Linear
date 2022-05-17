@@ -1,0 +1,31 @@
+﻿@using LinearUpdateDashboard.ViewModels
+@model SpotPageModel
+
+<div>    
+    @for (int i=0; i<Model.NumPages; i++)
+    {
+        if (Model.CurrentPage == i+1)
+        {
+            <a class="btn btn-primary" href="@Url.Action("Details","Market",new { currentPage = i+1, numItems = Model.ItemsPerPage, name = Model.MarketName })">@(i + 1)</a>
+        }
+        else
+        {
+            <a class="btn btn-default" href="@Url.Action("Details","Market",new { currentPage = i+1, numItems = Model.ItemsPerPage, name = Model.MarketName })">@(i + 1)</a>
+        }        
+    }
+    Items Per
+    <select id="numchange">        
+        <option>3</option>
+        <option>5</option>
+        <option>10</option>
+    </select>
+</div>
+
+<script>
+    $('#numchange').on('change', function() {
+       // go to the page with the new number of items per page
+       // reset the page to 1 when the count changes
+       urlPrefix = "/Market/@Model.MarketName";
+       window.location.href = urlPrefix + "?currentPage=1&numItems=" + this.value;
+    });
+</script>
