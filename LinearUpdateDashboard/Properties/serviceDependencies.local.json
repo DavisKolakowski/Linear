@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "secrets2": {
+      "type": "secrets.user"
+    },
+    "appInsights1": {
+      "secretStore": null,
+      "resourceId": null,
+      "type": "appInsights.sdk",
+      "connectionId": null
+    },
+    "mssql1": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": null,
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:LinearSQLDatabase"
+    }
+  }
+}

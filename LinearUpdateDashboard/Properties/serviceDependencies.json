@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "secrets2": {
+      "type": "secrets"
+    },
+    "appInsights1": {
+      "type": "appInsights",
+      "connectionId": null
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:LinearSQLDatabase"
+    }
+  }
+}

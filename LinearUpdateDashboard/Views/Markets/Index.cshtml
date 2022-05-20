@@ -1,0 +1,38 @@
+﻿@model LinearUpdateDashboard.ViewModels.MarketListViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="mb-5">
+    <table class="table table-bordered text-nowrap w-100">
+        <thead>
+            <tr>
+                <th>
+                    MARKET
+                </th>
+                <th>
+                    LAST UPDATE
+                </th>
+                <th>
+                    SPOTS IN MARKET
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Markets) {
+            <tr>
+                <td style="text-transform: uppercase;">
+                    @item.Name
+                </td>
+                <td>
+                    @item.LastUpdated
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-name="@item.Name" class="link-info text-decoration-none">DETAILS</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

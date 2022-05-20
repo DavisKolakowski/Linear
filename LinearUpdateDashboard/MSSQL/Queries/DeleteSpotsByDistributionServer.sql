@@ -1,0 +1,1 @@
+exec DeleteSpotsByDistributionServer @DistributionServerIdentity='vaacdpit02'
