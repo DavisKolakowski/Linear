@@ -25,27 +25,25 @@ namespace LinearConflictService.Logic
             await conn.OpenAsync();
 
             var distServers = await FileScrapeManager.GetDistributionServerAsync(conString);
+    
             foreach (var distServer in distServers)
             {
-                var items = await FileScraperService.ReadSpotsListAsync(@$"C:\{distServer.ServerFolder}\c$\encodelist");
+                var items = await FileScraperService.GetServerDirectoryAsync(distServer.ServerFolder);
+
                 Console.WriteLine($"Deleting spots for {distServer.ServerFolder}");
-                await conn.ExecuteAsync($"exec DeleteSpotsByDistributionServer @DistributionServerIdentity='{distServer.ServerFolder}'");
+                await conn.ExecuteAsync($"exec DeleteSpotsByDistributionServer @DistributionServerIdentity=@DistributionServerIdentity", new { DistributionServerIdentity = distServer.ServerIdentity });
                 Console.WriteLine("Starting Database Upload...");
-                foreach (var item in items)
-                {
-                    await conn.ExecuteAsync("exec dbo.InsertSpot DistributionServerIdentity = @DistributionServerIdentity, SpotCode = @SpotCode, Name = @SpotTitle, FirstAirDate = @FirstAirDate",
-                        new
-                        {
-                            DistributionServerIdentity = distServer.ServerFolder,
-                            SpotCode = item.SpotCode,
-                            SpotTitle = item.SpotTitle,
-                            FirstAirDate = item.FirstAirDate
-                        });
-                    Console.WriteLine($"{item.SpotCode}, {item.SpotTitle}, {item.FirstAirDate}");
-                }
+                items.ToList().ForEach(async x =>
+                    await conn.ExecuteAsync("exec dbo.InsertSpot @DistributionServerIdentity = @DistributionServerIdentity, @SpotCode = @SpotCode, @Name = @SpotTitle, @FirstAirDate = @FirstAirDate",
+                    new
+                    {
+                        DistributionServerIdentity = distServer.ServerIdentity,
+                        SpotCode = x.SpotCode,
+                        SpotTitle = x.SpotTitle,
+                        FirstAirDate = x.FirstAirDate
+                    }));
                 Console.WriteLine($"Upload Complete! {items.Count()} Spots have been uploaded");
             }
-
         }
     }
 }

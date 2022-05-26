@@ -15,22 +15,11 @@ namespace LinearConflictService.Logic
 {
     internal class FileScrapeManager
     {
-        public static async Task<List<DistributionServerModel>> GetDistributionServerAsync(string conString)
-{
+        public static async Task<IEnumerable<DistributionServerModel>> GetDistributionServerAsync(string conString)
+        {
             SqlConnection conn = new SqlConnection(conString);
-            await conn.OpenAsync();
-
-            var servers = new List<DistributionServerModel>();
-            foreach(var server in servers)
-            {
-                await conn.ExecuteAsync("SELECT * FROM dbo.DistributionServers WHERE ServerFolder=@ServerFolder",
-                    new
-                    {
-                        ServerFolder = server.ServerFolder
-                    });
-                servers.Add(server);
-            }
-            return servers;
+            var ds = await conn.QueryAsync<DistributionServerModel>("SELECT * FROM dbo.DistributionServers WHERE ServerFolder IS NOT NULL");
+            return ds;
         }
     }
 }

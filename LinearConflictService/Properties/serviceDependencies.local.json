@@ -5,8 +5,14 @@
     },
     "mssql1": {
       "secretStore": "LocalSecretsFile",
+      "resourceId": null,
       "type": "mssql.onprem",
       "connectionId": "ConnectionStrings:LinearSQLDatabase"
+    },
+    "mssql2": {
+      "secretStore": "LocalSecretsFile",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:LinearTestSQLDatabase"
     }
   }
 }

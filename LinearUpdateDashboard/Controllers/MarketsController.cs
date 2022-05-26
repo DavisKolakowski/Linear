@@ -1,4 +1,5 @@
 ﻿using LinearUpdateDashboard.Data;
+using LinearUpdateDashboard.Models;
 using LinearUpdateDashboard.ViewModels;
 
 using Microsoft.AspNetCore.Mvc;
@@ -24,13 +25,22 @@ namespace LinearUpdateDashboard.Controllers
         // GET: Markets
         public async Task<IActionResult> Index()
         {
+            var markets = await this._context.Markets.ToListAsync();
+            var countDict = new Dictionary<int,int>();
+    
+            foreach(var market in markets) {
+                var spots = await this.GetSpotsByMarketName(market.Name);
+                countDict.Add(market.Id, spots.Count());
+            }
+
             var model = new MarketListViewModel()
             {
-                Markets = await this._context.Markets.ToListAsync()
+                Markets = markets,
+                MarketSpotCount = countDict
             };
             return _context.Markets != null ?
-                          View(model) :
-                          Problem("Entity set 'LinearDbContext.Markets'  is null.");
+                            View(model) :
+                            Problem("Entity set 'LinearDbContext.Markets'  is null.");
         }
 
         // GET: Market/Details/liberty
@@ -43,7 +53,18 @@ namespace LinearUpdateDashboard.Controllers
             }
             var model = new MarketDetailsViewModel()
             {
-                SpotsInMarket = await this._context.Markets
+                SpotsInMarket = await this.GetSpotsByMarketName(name)
+            };
+            if (model == null)
+            {
+                return this.NotFound();
+            }
+            return View(model);
+        }
+
+        public async Task<List<Spot>> GetSpotsByMarketName(string name) 
+        {
+            return await this._context.Markets
                     .Where(m => m.Name == name)
                     .Include(hq => hq.Headquarters)
                             .ThenInclude(hqds => hqds.DistributionServers)
@@ -56,13 +77,7 @@ namespace LinearUpdateDashboard.Controllers
                         .SelectMany(ds => ds.DistributionServerSpots)
                         .Select(dss => dss.Spot)
                         .Distinct()
-                        .ToListAsync()
-            };
-            if (model == null)
-            {
-                return this.NotFound();
-            }
-            return View(model);
+                        .ToListAsync();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
