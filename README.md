@@ -247,15 +247,6 @@ public static async Task<IEnumerable<DistributionServerModel>> GetDistributionSe
 If you have any feedback, please fill out the following related form Linear/.github/ISSUE_TEMPLATE/
 
 
-## Run Locally
-
-The following link will provide access to use this tool
-
-```bash
-  https://wstcqc-ho-05p.cable.comcast.com:6831/
-```
-
-
 ## Used By
 
 This project is used by:
