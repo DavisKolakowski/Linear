@@ -89,7 +89,7 @@ namespace LinearConflictService.Logic
                     Console.WriteLine(e.InnerException);
                 }
             }
-            Log.Logger.Information("Spots file {0} read successfully, returned {1} spots.", lines, spots.Count());
+            Log.Logger.Information("Spots file {0} read successfully, returned {1} spots.", spots.Count());
             return spots;
         }
     }

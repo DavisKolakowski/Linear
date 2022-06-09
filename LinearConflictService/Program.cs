@@ -23,7 +23,7 @@ namespace LinearConflictService
 
             Log.Logger = new LoggerConfiguration()
                             .WriteTo.Console()
-                            .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
+                            .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14)
                             .CreateLogger();
 
             Log.Logger.Information("Application Starting");

@@ -10,6 +10,11 @@
     "mssql1": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:LinearSQLDatabase"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:LinearTestSQLDatabase",
+      "dynamicId": null
     }
   }
 }

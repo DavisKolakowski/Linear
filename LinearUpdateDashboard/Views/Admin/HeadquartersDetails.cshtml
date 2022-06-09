@@ -1,0 +1,70 @@
+﻿@model LinearUpdateDashboard.ViewModels.HeadquartersDetailsAdminViewModel
+
+@{
+    ViewData["Title"] = "HeadquartersDetails";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Market Headquarters Details</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Headquarters.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Headquarters.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Headquarters.LastUpdated)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Headquarters.LastUpdated)
+        </dd>
+    </dl>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                DISTRIBUTION SERVER
+            </th>
+            <th>
+                SERVER PATH
+            </th>
+            <th>
+                LAST MODIFIED
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.DistributionServers) {
+        <tr>
+            <td style="text-transform: uppercase;">
+                @item.ServerIdentity
+            </td>
+            <td>
+               @item.ServerFolder
+            </td>
+            <td>
+                @item.LastUpdated
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<p>
+    <a asp-action="Create">Add/Create New Distribution Server</a>
+</p>
+<div>
+    <a asp-action="Edit" asp-route-name="@Model.DistributionServers">Edit</a> |
+    <a asp-action="MarketDetails">Back to Market Details</a>
+</div>

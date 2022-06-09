@@ -11,7 +11,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<LinearDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("LinearSQLDatabase")));
+        builder.Configuration.GetConnectionString("LinearTestSQLDatabase")));
 
 builder.Services.AddScoped<DbContext, LinearDbContext>();
 
