@@ -15,6 +15,10 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:LinearTestSQLDatabase",
       "dynamicId": null
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:LogSQLDatabase"
     }
   }
 }

@@ -1,51 +1,86 @@
 using LinearUpdateDashboard.Data;
+using LinearUpdateDashboard.Models.Configuration;
 
 using Microsoft.EntityFrameworkCore;
 
 using Serilog;
+using Serilog.Sinks.MSSqlServer;
 
-var builder = WebApplication.CreateBuilder(args);
+using System.Configuration;
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddDbContext<LinearDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("LinearTestSQLDatabase")));
-
-builder.Services.AddScoped<DbContext, LinearDbContext>();
-
-builder.Services.AddRazorPages()
-    .AddRazorRuntimeCompilation();
-
-builder.Host.UseSerilog((context, services, configuration) => configuration
-                    .ReadFrom.Configuration(context.Configuration)
-                    .ReadFrom.Services(services)
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console());
-
-builder.Services.AddApplicationInsightsTelemetry();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+Log.Information("Starting up");
+try
 {
-    app.UseExceptionHandler("/Market/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddLogging(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddConsole();
+    });
+
+    var serilogConfigSection = builder.Configuration.GetSection("Serilog");
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console()
+        .WriteTo.MSSqlServer(
+            connectionString: serilogConfigSection.GetSection("ConnectionStrings:LogSQLDatabase").Value,
+            tableName: serilogConfigSection.GetSection("TableName").Value,
+            appConfiguration: serilogConfigSection,
+            autoCreateSqlTable: true,
+            columnOptionsSection: serilogConfigSection.GetSection("ColumnOptions"),
+            schemaName: serilogConfigSection.GetSection("SchemaName").Value)
+        );
+
+    builder.Services.AddControllersWithViews();
+
+    builder.Services.AddDbContext<LinearDbContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("LinearSQLDatabase")));
+
+    builder.Services.AddScoped<DbContext, LinearDbContext>();
+
+    var spotStatusConfigSection = builder.Configuration.GetSection("SpotStatusCheckerDirPaths");
+    var spotStatusConfig = spotStatusConfigSection.Get<SpotStatusDirectoryConfiguration>();
+    builder.Services.Configure<SpotStatusDirectoryConfiguration>(spotStatusConfigSection);
+
+    builder.Services.AddRazorPages()
+        .AddRazorRuntimeCompilation();
+
+    builder.Services.AddApplicationInsightsTelemetry();
+
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Market/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+    }
+    
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
+
+    app.UseRouting();
+
+    app.UseAuthorization();
+
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Markets}/{action=Index}/{name?}");
+
+    app.Run();
 }
-app.UseSerilogRequestLogging();
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Markets}/{action=Index}/{name?}");
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Unhandled exception has occurred");
+}
+finally
+{
+    Log.Information("Shut down complete");
+    Log.CloseAndFlush();
+}

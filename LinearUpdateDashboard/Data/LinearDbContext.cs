@@ -14,7 +14,6 @@ namespace LinearUpdateDashboard.Data
             : base(options)
         {
         }
-
         public DbSet<DistributionServer> DistributionServers { get; set; } = null!;
         public DbSet<DistributionServerSpot> DistributionServerSpots { get; set; } = null!;
         public DbSet<Headquarters> Headquarters { get; set; } = null!;

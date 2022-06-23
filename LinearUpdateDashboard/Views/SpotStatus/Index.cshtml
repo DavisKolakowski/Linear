@@ -1,0 +1,14 @@
+﻿@model LinearUpdateDashboard.ViewModels.SpotsInputFormViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Spot Status</h1>
+
+<div class="mb-3 row">
+    <form asp-action="SpotStatusResults" asp-controller="SpotStatus">
+        <p>Spot Lookup</p>
+        @Html.TextAreaFor(m=>m.VaultSearch, new {@class="form-control", rows="10"})
+
+        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+</div>

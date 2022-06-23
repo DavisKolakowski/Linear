@@ -20,6 +20,11 @@
       "type": "mssql.onprem",
       "connectionId": "ConnectionStrings:LinearTestSQLDatabase",
       "dynamicId": null
+    },
+    "mssql3": {
+      "secretStore": "LocalSecretsFile",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:LogSQLDatabase"
     }
   }
 }
