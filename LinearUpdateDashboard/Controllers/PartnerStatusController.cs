@@ -1,126 +1,141 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LinearUpdateDashboard.ViewModels;
-using LinearUpdateDashboard.Models.Configuration;
-using Microsoft.Extensions.Options;
-using LinearUpdateDashboard.Models;
-using System.Text.RegularExpressions;
+﻿// <copyright file="MarketsController.cs" company="Comcast">
+// Copyright (c) Comcast. All Rights Reserved.
+// </copyright>
 
 namespace LinearUpdateDashboard.Controllers
 {
+    using System.Text.RegularExpressions;
+    using LinearUpdateDashboard.Models;
+    using LinearUpdateDashboard.Models.Configuration;
+    using LinearUpdateDashboard.ViewModels;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Options;
+
+    /// <summary>
+    ///   <br />
+    /// </summary>
     public class PartnerStatusController : Controller
     {
         private readonly ILogger<PartnerStatusController> _logger;
 
         private readonly SpotStatusDirectoryConfiguration _config;
+
+        /// <summary>Initializes a new instance of the <see cref="PartnerStatusController" /> class.</summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="config">The configuration.</param>
         public PartnerStatusController(ILogger<PartnerStatusController> logger, IOptions<SpotStatusDirectoryConfiguration> config)
         {
             this._logger = logger;
-            this._config = config.Value;         
+            this._config = config.Value;
         }
 
+        /// <summary>Indexes this instance.</summary>
+        /// <returns>Search Partner Directories.</returns>
         [HttpGet("PartnerStatus/Index")]
         public IActionResult Index()
         {
-            return View();
+            return this.View();
         }
 
+        /// <summary>Assets the status results.</summary>
+        /// <param name="input">The input.</param>
+        /// <returns>Post Results of Spot's Status.</returns>
         [HttpPost]
         public IActionResult AssetStatusResults(AssetCheckInputFormViewModel input)
         {
-            var alticeDir = new DirectoryInfo(_config.AlticeAssetsFolderPrefix);
-            var spectrumDir = new DirectoryInfo(_config.SpectrumAssetsFolderPrefix);
-            var frontierEastDir = new DirectoryInfo(_config.FrontierEastAssetsFolderPrefix);
-            var frontierWestDir = new DirectoryInfo(_config.FrontierWestAssetsFolderPrefix);
-
             if (input.AssetSearch == null)
             {
                 return this.NoContent();
             }
 
-            var spots = input.AssetSearch.Split(
+            string[] spots = input.AssetSearch.Split(
                 new string[] { Environment.NewLine },
-                StringSplitOptions.None
-            );
+                StringSplitOptions.None);
 
             AssetsResultsViewModel model = new AssetsResultsViewModel();
-                foreach (var spot in spots)
-                {                   
-                    var spotExistsInAlticeAssets = DirectoryCheck(spot, alticeDir.FullName);
-                    var spotExistsInSpectrumAssets = DirectoryCheck(spot, spectrumDir.FullName);
-                    var spotExistsInFrontierEastAssets = DirectoryCheck(spot, frontierEastDir.FullName);
-                    var spotExistsInFrontierWestAssets = DirectoryCheck(spot, frontierWestDir.FullName);
-
-                        _logger.LogTrace("Attempting to find {0} in {1}", spot, alticeDir);
+            foreach (var spot in spots)
+                {
+                        bool spotExistsInAlticeAssets = this.SpotExistsInDirectory(spot, this._config.AlticeAssetsFolderPrefix);
+                        this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.AlticeAssetsFolderPrefix);
                         if (spotExistsInAlticeAssets)
                         {
-                            _logger.LogTrace("{0} found in {1}", spot, alticeDir);
+                            this._logger.LogInformation("{0} found in {1}", spot, this._config.AlticeAssetsFolderPrefix);
                             model.SpotFoundInAlticeAssets.Add(spot);
                         }
-
                         else
-                        { 
-                        _logger.LogTrace("Attempting to find {0} in {1}", spot, spectrumDir);
+                        {
+                        this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.SpectrumAssetsFolderPrefix);
                         }
+
+                        bool spotExistsInSpectrumAssets = this.SpotExistsInDirectory(spot, this._config.SpectrumAssetsFolderPrefix);
                         if (spotExistsInSpectrumAssets)
                         {
-                            _logger.LogTrace("{0} found in {1}", spot, spectrumDir);
+                            this._logger.LogInformation("{0} found in {1}", spot, this._config.SpectrumAssetsFolderPrefix);
                             model.SpotFoundInSpectrumAssets.Add(spot);
                         }
-
                         else
                         {
-                            _logger.LogTrace("Attempting to find {0} in {1}", spot, frontierEastDir);
+                            this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.FrontierEastAssetsFolderPrefix);
                         }
+
+                        bool spotExistsInFrontierEastAssets = this.SpotExistsInDirectory(spot, this._config.FrontierEastAssetsFolderPrefix);
                         if (spotExistsInFrontierEastAssets)
                         {
-                            _logger.LogTrace("{0} found in {1}", spot, frontierEastDir);
+                            this._logger.LogInformation("{0} found in {1}", spot, this._config.FrontierEastAssetsFolderPrefix);
                             model.SpotFoundInFrontierEastAssets.Add(spot);
                         }
-
                         else
                         {
-                            _logger.LogTrace("Attempting to find {0} in {1}", spot, frontierWestDir);
-                        }
-                        if (spotExistsInFrontierWestAssets)
-                        {
-                            _logger.LogTrace("{0} found in {1}", spot, frontierWestDir);
-                            model.SpotFoundInFrontierWestAssets.Add(spot);
+                            this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.FrontierWestAssetsFolderPrefix);
                         }
 
+                        bool spotExistsInFrontierWestAssets = this.SpotExistsInDirectory(spot, this._config.FrontierWestAssetsFolderPrefix);
+                        if (spotExistsInFrontierWestAssets)
+                        {
+                            this._logger.LogInformation("{0} found in {1}", spot, this._config.FrontierWestAssetsFolderPrefix);
+                            model.SpotFoundInFrontierWestAssets.Add(spot);
+                        }
                         else if (!spotExistsInAlticeAssets && !spotExistsInSpectrumAssets && !spotExistsInFrontierEastAssets && !spotExistsInFrontierWestAssets)
                         {
-                            _logger.LogTrace("{0} not found in {1}, {2}, {3}, and {4}", spot, spotExistsInAlticeAssets, spotExistsInSpectrumAssets, spotExistsInFrontierEastAssets, spotExistsInFrontierWestAssets);
+                            this._logger.LogInformation("{0} not found in {1}, {2}, {3}, and {4}", spot, this._config.AlticeAssetsFolderPrefix, this._config.SpectrumAssetsFolderPrefix, this._config.FrontierEastAssetsFolderPrefix, this._config.FrontierWestAssetsFolderPrefix);
                             model.SpotNotFound.Add(spot);
                         }
                 }
-            return View("Result", model);
+
+            return this.View("Result", model);
         }
-        
-        public bool DirectoryCheck(string spot, string dir)
+
+        /// <summary>Spots the exists in directory.</summary>
+        /// <param name="spot">The spot.</param>
+        /// <param name="dir">The dir.</param>
+        /// <returns>Spots Existing in Partner Directory Paths.</returns>
+        public bool SpotExistsInDirectory(string spot, string dir)
         {
             if (string.IsNullOrEmpty(dir))
             {
-                _logger.LogError("Directory is not set: ", dir);
+                this._logger.LogError("Directory is not set: ", dir);
                 return false;
             }
+
             if (!Directory.Exists(dir))
             {
-                _logger.LogError("Directory does not exist! ", dir);
+                this._logger.LogError("Directory does not exist! ", dir);
                 return false;
             }
-            var file = $"{spot}.mpg";
-            var spotFileFullPath = Path.Combine(dir, file);
 
-            _logger.LogTrace("Attempting to find {0} in {1}", file, dir);
-            var exists = System.IO.File.Exists(spotFileFullPath);
+            string file = $"{spot}.mpg";
+            string spotFileFullPath = Path.Combine(dir, file);
+
+            this._logger.LogTrace("Attempting to find {0} in {1}", file, dir);
+            bool exists = System.IO.File.Exists(spotFileFullPath);
 
             if (exists)
             {
-                _logger.LogTrace("{0} found in {1}", spot, dir);
+                this._logger.LogInformation("{0} found in {1}", spot, dir);
             }
             else
             {
-                _logger.LogTrace("{0} not found in {1}", spot, dir);
+                this._logger.LogInformation("{0} not found in {1}", spot, dir);
             }
 
             return exists;

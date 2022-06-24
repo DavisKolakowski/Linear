@@ -1,12 +1,11 @@
+// <copyright file="MarketsController.cs" company="Comcast">
+// Copyright (c) Comcast. All Rights Reserved.
+// </copyright>
+
 using LinearUpdateDashboard.Data;
 using LinearUpdateDashboard.Models.Configuration;
-
 using Microsoft.EntityFrameworkCore;
-
 using Serilog;
-using Serilog.Sinks.MSSqlServer;
-
-using System.Configuration;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -32,8 +31,7 @@ try
             appConfiguration: serilogConfigSection,
             autoCreateSqlTable: true,
             columnOptionsSection: serilogConfigSection.GetSection("ColumnOptions"),
-            schemaName: serilogConfigSection.GetSection("SchemaName").Value)
-        );
+            schemaName: serilogConfigSection.GetSection("SchemaName").Value));
 
     builder.Services.AddControllersWithViews();
 
@@ -58,10 +56,11 @@ try
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Market/Error");
+
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
-    
+
     app.UseHttpsRedirection();
     app.UseStaticFiles();
 
