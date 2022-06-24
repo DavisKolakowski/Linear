@@ -22,16 +22,12 @@ try
         logging.AddConsole();
     });
 
-    var serilogConfigSection = builder.Configuration.GetSection("Serilog");
-    builder.Host.UseSerilog((ctx, lc) => lc
-        .WriteTo.Console()
-        .WriteTo.MSSqlServer(
-            connectionString: serilogConfigSection.GetSection("ConnectionStrings:LogSQLDatabase").Value,
-            tableName: serilogConfigSection.GetSection("TableName").Value,
-            appConfiguration: serilogConfigSection,
-            autoCreateSqlTable: true,
-            columnOptionsSection: serilogConfigSection.GetSection("ColumnOptions"),
-            schemaName: serilogConfigSection.GetSection("SchemaName").Value));
+    builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+    {
+        loggerConfiguration.MinimumLevel.Debug();
+        loggerConfiguration.WriteTo.Console();
+        loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
+    });
 
     builder.Services.AddControllersWithViews();
 

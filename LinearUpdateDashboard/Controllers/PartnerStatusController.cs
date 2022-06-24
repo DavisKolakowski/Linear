@@ -56,48 +56,48 @@ namespace LinearUpdateDashboard.Controllers
             foreach (var spot in spots)
                 {
                         bool spotExistsInAlticeAssets = this.SpotExistsInDirectory(spot, this._config.AlticeAssetsFolderPrefix);
-                        this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.AlticeAssetsFolderPrefix);
+                        this._logger.LogDebug("Attempting to find {0} in {1}", spot, this._config.AlticeAssetsFolderPrefix);
                         if (spotExistsInAlticeAssets)
                         {
-                            this._logger.LogInformation("{0} found in {1}", spot, this._config.AlticeAssetsFolderPrefix);
+                            this._logger.LogDebug("{0} found in {1}", spot, this._config.AlticeAssetsFolderPrefix);
                             model.SpotFoundInAlticeAssets.Add(spot);
                         }
                         else
                         {
-                        this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.SpectrumAssetsFolderPrefix);
+                        this._logger.LogDebug("Attempting to find {0} in {1}", spot, this._config.SpectrumAssetsFolderPrefix);
                         }
 
                         bool spotExistsInSpectrumAssets = this.SpotExistsInDirectory(spot, this._config.SpectrumAssetsFolderPrefix);
                         if (spotExistsInSpectrumAssets)
                         {
-                            this._logger.LogInformation("{0} found in {1}", spot, this._config.SpectrumAssetsFolderPrefix);
+                            this._logger.LogDebug("{0} found in {1}", spot, this._config.SpectrumAssetsFolderPrefix);
                             model.SpotFoundInSpectrumAssets.Add(spot);
                         }
                         else
                         {
-                            this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.FrontierEastAssetsFolderPrefix);
+                            this._logger.LogDebug("Attempting to find {0} in {1}", spot, this._config.FrontierEastAssetsFolderPrefix);
                         }
 
                         bool spotExistsInFrontierEastAssets = this.SpotExistsInDirectory(spot, this._config.FrontierEastAssetsFolderPrefix);
                         if (spotExistsInFrontierEastAssets)
                         {
-                            this._logger.LogInformation("{0} found in {1}", spot, this._config.FrontierEastAssetsFolderPrefix);
+                            this._logger.LogDebug("{0} found in {1}", spot, this._config.FrontierEastAssetsFolderPrefix);
                             model.SpotFoundInFrontierEastAssets.Add(spot);
                         }
                         else
                         {
-                            this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.FrontierWestAssetsFolderPrefix);
+                            this._logger.LogDebug("Attempting to find {0} in {1}", spot, this._config.FrontierWestAssetsFolderPrefix);
                         }
 
                         bool spotExistsInFrontierWestAssets = this.SpotExistsInDirectory(spot, this._config.FrontierWestAssetsFolderPrefix);
                         if (spotExistsInFrontierWestAssets)
                         {
-                            this._logger.LogInformation("{0} found in {1}", spot, this._config.FrontierWestAssetsFolderPrefix);
+                            this._logger.LogDebug("{0} found in {1}", spot, this._config.FrontierWestAssetsFolderPrefix);
                             model.SpotFoundInFrontierWestAssets.Add(spot);
                         }
                         else if (!spotExistsInAlticeAssets && !spotExistsInSpectrumAssets && !spotExistsInFrontierEastAssets && !spotExistsInFrontierWestAssets)
                         {
-                            this._logger.LogInformation("{0} not found in {1}, {2}, {3}, and {4}", spot, this._config.AlticeAssetsFolderPrefix, this._config.SpectrumAssetsFolderPrefix, this._config.FrontierEastAssetsFolderPrefix, this._config.FrontierWestAssetsFolderPrefix);
+                            this._logger.LogDebug("{0} not found in {1}, {2}, {3}, and {4}", spot, this._config.AlticeAssetsFolderPrefix, this._config.SpectrumAssetsFolderPrefix, this._config.FrontierEastAssetsFolderPrefix, this._config.FrontierWestAssetsFolderPrefix);
                             model.SpotNotFound.Add(spot);
                         }
                 }
@@ -126,16 +126,16 @@ namespace LinearUpdateDashboard.Controllers
             string file = $"{spot}.mpg";
             string spotFileFullPath = Path.Combine(dir, file);
 
-            this._logger.LogTrace("Attempting to find {0} in {1}", file, dir);
+            this._logger.LogDebug("Attempting to find {0} in {1}", file, dir);
             bool exists = System.IO.File.Exists(spotFileFullPath);
 
             if (exists)
             {
-                this._logger.LogInformation("{0} found in {1}", spot, dir);
+                this._logger.LogDebug("{0} found in {1}", spot, dir);
             }
             else
             {
-                this._logger.LogInformation("{0} not found in {1}", spot, dir);
+                this._logger.LogDebug("{0} not found in {1}", spot, dir);
             }
 
             return exists;

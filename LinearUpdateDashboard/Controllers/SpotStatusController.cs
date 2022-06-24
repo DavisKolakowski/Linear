@@ -67,35 +67,35 @@ namespace LinearUpdateDashboard.Controllers
 
                     bool spotExistsInEastVault = this.SpotExistsInDirectory(spot, this._config.EastVaultFolderPrefix);
                     bool spotExistsInWestVault = this.SpotExistsInDirectory(spot, this._config.WestVaultFolderPrefix);
-                    this._logger.LogTrace("Attempting to find {0} in {1} and {2}", spot, this._config.EastVaultFolderPrefix, this._config.WestVaultFolderPrefix);
+                    this._logger.LogDebug("Attempting to find {0} in {1} and {2}", spot, this._config.EastVaultFolderPrefix, this._config.WestVaultFolderPrefix);
                     if (spotExistsInEastVault && spotExistsInWestVault)
                     {
-                        this._logger.LogInformation("{0} found in {1} and {2}", spot, this._config.EastVaultFolderPrefix, this._config.WestVaultFolderPrefix);
+                        this._logger.LogDebug("{0} found in {1} and {2}", spot, this._config.EastVaultFolderPrefix, this._config.WestVaultFolderPrefix);
                         model.SpotFoundInBothVaults.Add(spot);
                     }
                     else
                     {
-                        this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.EastVaultFolderPrefix);
+                        this._logger.LogDebug("Attempting to find {0} in {1}", spot, this._config.EastVaultFolderPrefix);
                     }
 
                     if (spotExistsInEastVault && !spotExistsInWestVault)
                     {
-                        this._logger.LogInformation("{0} found in {1}", spot, this._config.EastVaultFolderPrefix);
+                        this._logger.LogDebug("{0} found in {1}", spot, this._config.EastVaultFolderPrefix);
                         model.SpotFoundInEastVault.Add(spot);
                     }
                     else
                     {
-                        this._logger.LogTrace("Attempting to find {0} in {1}", spot, this._config.WestVaultFolderPrefix);
+                        this._logger.LogDebug("Attempting to find {0} in {1}", spot, this._config.WestVaultFolderPrefix);
                     }
 
                     if (!spotExistsInEastVault && spotExistsInWestVault)
                     {
-                        this._logger.LogInformation("{0} found in {1}", spot, this._config.WestVaultFolderPrefix);
+                        this._logger.LogDebug("{0} found in {1}", spot, this._config.WestVaultFolderPrefix);
                         model.SpotFoundInWestVault.Add(spot);
                     }
                     else
                     {
-                        this._logger.LogTrace("Attempting to find {0} in {1} and {2}", spot, this._config.EastPrimaryMezzFolderPrefix, this._config.WestPrimaryMezzFolderPrefix);
+                        this._logger.LogDebug("Attempting to find {0} in {1} and {2}", spot, this._config.EastPrimaryMezzFolderPrefix, this._config.WestPrimaryMezzFolderPrefix);
                     }
 
                     string mezzSpot = this.GetValidSpotIdForMezz(spot);
@@ -104,12 +104,12 @@ namespace LinearUpdateDashboard.Controllers
                     bool spotExistsInWestMezz = this.SpotExistsInDirectory(mezzSpot, this._config.WestPrimaryMezzFolderPrefix);
                     if ((!spotExistsInEastVault && !spotExistsInWestVault) && (spotExistsInEastMezz || spotExistsInWestMezz))
                     {
-                        this._logger.LogInformation("{0} found in {1} and {2}", spot, this._config.EastPrimaryMezzFolderPrefix, this._config.WestPrimaryMezzFolderPrefix);
+                        this._logger.LogDebug("{0} found in {1} and {2}", spot, this._config.EastPrimaryMezzFolderPrefix, this._config.WestPrimaryMezzFolderPrefix);
                         model.SpotNotFoundInVaultsButFoundInMezz.Add(spot);
                     }
                     else if (!spotExistsInEastVault && !spotExistsInWestVault && !spotExistsInEastMezz && !spotExistsInWestMezz)
                     {
-                        this._logger.LogInformation("{0} not found in {1}, {2}, {3}, and {4}", spot, this._config.EastVaultFolderPrefix, this._config.WestVaultFolderPrefix, this._config.EastPrimaryMezzFolderPrefix, this._config.WestPrimaryMezzFolderPrefix);
+                        this._logger.LogDebug("{0} not found in {1}, {2}, {3}, and {4}", spot, this._config.EastVaultFolderPrefix, this._config.WestVaultFolderPrefix, this._config.EastPrimaryMezzFolderPrefix, this._config.WestPrimaryMezzFolderPrefix);
                         model.SpotNotFoundInVaultOrMezz.Add(spot);
                     }
                 }
@@ -128,46 +128,50 @@ namespace LinearUpdateDashboard.Controllers
 
             string hPattern = @"^.{2}H\d+";
             Regex hVar = new Regex(hPattern);
-            this._logger.LogInformation("Verifying variant of AdCopy {0}", spot);
+            this._logger.LogDebug("Verifying variant of AdCopy {0}", spot);
             if (hVar.IsMatch(spot))
             {
+                this._logger.LogInformation("Match found! {0}", spot);
                 spotCharArray[2] = '8';
                 spot = string.Concat(spotCharArray);
-                this._logger.LogInformation("{0} Match found! Mezz ID = {1}", spotCharArray.ToString(), spot);
+                this._logger.LogInformation("Mezz ID = {0}", spot);
             }
 
             string aPattern = @"^.{2}A\d+";
             Regex aVar = new Regex(aPattern);
             if (aVar.IsMatch(spot))
             {
+                this._logger.LogInformation("Match found! {0}", spot);
                 spotCharArray[2] = '1';
                 spot = string.Concat(spotCharArray);
-                this._logger.LogInformation("{0} Match found! Mezz ID = {1}", spotCharArray.ToString(), spot);
+                this._logger.LogInformation("Mezz ID = {0}", spot);
             }
 
             string fourPattern = @"^.{2}4\d+";
             Regex fourVar = new Regex(fourPattern);
             if (fourVar.IsMatch(spot))
             {
+                this._logger.LogInformation("Match found! {0}", spot);
                 spotCharArray[2] = '8';
                 spot = string.Concat(spotCharArray);
-                this._logger.LogInformation("{0} Match found! Mezz ID = {1}", spotCharArray.ToString(), spot);
+                this._logger.LogInformation("Mezz ID = {0}", spot);
             }
 
             string sevenPattern = @"^.{2}7\d+";
             Regex sevenVar = new Regex(sevenPattern);
             if (sevenVar.IsMatch(spot))
             {
+                this._logger.LogInformation("Match found! {0}", spot);
                 spotCharArray[2] = '8';
                 spot = string.Concat(spotCharArray);
-                this._logger.LogInformation("{0} Match found! Mezz ID = {1}", spotCharArray.ToString(), spot);
+                this._logger.LogInformation("Mezz ID = {0}", spot);
             }
             else
             {
-                this._logger.LogInformation("Spot is already valid {0}", spot);
+                this._logger.LogDebug("Spot is already valid {0}", spot);
             }
 
-            this._logger.LogInformation("Returning ID {0}", spot);
+            this._logger.LogDebug("Returning ID {0}", spot);
             return spot;
         }
 
@@ -194,16 +198,16 @@ namespace LinearUpdateDashboard.Controllers
             string file = $"{spot}.mpg";
             string spotFileFullPath = Path.Combine(dir, file);
 
-            this._logger.LogTrace("Attempting to find {0} in {1}", file, dir);
+            this._logger.LogDebug("Attempting to find {0} in {1}", file, dir);
             bool exists = System.IO.File.Exists(spotFileFullPath);
 
             if (exists)
             {
-                this._logger.LogInformation("{0} found in {1}", spot, dir);
+                this._logger.LogDebug("{0} found in {1}", spot, dir);
             }
             else
             {
-                this._logger.LogInformation("{0} not found in {1}", spot, dir);
+                this._logger.LogDebug("{0} not found in {1}", spot, dir);
             }
 
             return exists;
