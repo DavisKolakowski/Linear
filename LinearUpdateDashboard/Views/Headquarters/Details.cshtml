@@ -1,0 +1,81 @@
+﻿@model LinearUpdateDashboard.ViewModels.Admin.HeadquartersDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Headquarters</h4>
+    <hr />
+<div class="mb-5">
+<table class="table-responsive table-borderless table-sm">
+    <thead>
+        <tr>
+            <th>
+                HEADQUARTERS
+            </th>
+            <th>
+                LAST MODIFIED
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-transform: uppercase;">
+                @Model.Headquarters.Name
+            </td>
+            <td>
+                @Model.Headquarters.LastUpdated
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table-responsive table-borderless table-sm">
+    <thead>
+        <tr>
+            <th>
+                MARKETS
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var market in Model.Headquarters.Markets) {
+        <tr>
+            <td style="text-transform: uppercase;">
+                @market.Name
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<table class="table-responsive table-borderless table-sm">
+    <thead>
+        <tr>
+            <th>
+                DISTRIBUTION SERVERS
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var distributionServer in Model.Headquarters.DistributionServers) {
+        <tr>
+            <td style="text-transform: uppercase;">
+                @distributionServer.ServerIdentity
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</div>
+</div>
+
+
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Headquarters.Id">Edit</a> |
+    <a asp-action="Admin">Back to List</a>
+</div>

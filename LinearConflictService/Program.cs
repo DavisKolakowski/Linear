@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Microsoft.Extensions.Logging;
-using Serilog.Sinks.SystemConsole;
+using Serilog.Sinks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
 
 namespace LinearConflictService
 {
@@ -23,15 +24,15 @@ namespace LinearConflictService
 
             Log.Logger = new LoggerConfiguration()
                             .WriteTo.Console()
-                            .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14)
+                            .ReadFrom.Configuration(config)
                             .CreateLogger();
 
-            Log.Logger.Information("Application Starting");
+            Log.Information("Application Starting");
 
             var conString = config.GetConnectionString("LinearTestSQLDatabase");
 
             await UpdateDbService.UpdateDatabaseAsync(conString);
-            Console.WriteLine("Task Complete!");
+            Log.Information("Task Complete!");
         }
     }
 }

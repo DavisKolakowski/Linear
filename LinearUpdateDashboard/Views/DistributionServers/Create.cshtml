@@ -1,0 +1,46 @@
+﻿@model LinearUpdateDashboard.ViewModels.Admin.DistributionServerCreateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>DistributionServer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" asp-controller="DistributionServers">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DistributionServer.ServerIdentity" class="control-label">Server Path</label>
+                <input asp-for="DistributionServer.ServerIdentity" class="form-control" />
+                <span asp-validation-for="DistributionServer.ServerIdentity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DistributionServer.ServerFolder" class="control-label">Server Path</label>
+                <input asp-for="DistributionServer.ServerFolder" class="form-control" />
+                <span asp-validation-for="DistributionServer.ServerFolder" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DistributionServer.Headquarters" class="control-label">Server Headquarters</label>
+                <select asp-for="SelectedHeadquartersId" 
+                        asp-items="@(new SelectList(Model.HeadquartersSelectedListItems, "Value", "Text"))", class="form-control" style="text-transform: uppercase;">
+                        <option>-- SELECT --</option>
+                </select>
+                <span asp-validation-for="DistributionServer.Headquarters.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary mt-2" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Admin">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

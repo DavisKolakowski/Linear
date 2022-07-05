@@ -13,6 +13,8 @@ using LinearConflictService.Models;
 
 using Microsoft.Data.SqlClient;
 
+using Serilog;
+
 using static System.Net.Mime.MediaTypeNames;
 
 namespace LinearConflictService.Logic
@@ -28,11 +30,17 @@ namespace LinearConflictService.Logic
     
             foreach (var distServer in distServers)
             {
+                if (!Directory.Exists(distServer.ServerFolder))
+                {
+                    Log.Fatal("Distribution path {0} is invalid!", distServer.ServerFolder);
+                    continue;
+                }
+
                 var items = await FileScraperService.GetServerDirectoryAsync(distServer.ServerFolder);
 
-                Console.WriteLine($"Deleting spots for {distServer.ServerFolder}");
+                Log.Verbose($"Deleting spots for {distServer.ServerFolder}");
                 await conn.ExecuteAsync($"exec DeleteSpotsByDistributionServer @DistributionServerIdentity=@DistributionServerIdentity", new { DistributionServerIdentity = distServer.ServerIdentity });
-                Console.WriteLine("Starting Database Upload...");
+                Log.Verbose("Starting Database Upload...");
                 items.ToList().ForEach(async x =>
                     await conn.ExecuteAsync("exec dbo.InsertSpot @DistributionServerIdentity = @DistributionServerIdentity, @SpotCode = @SpotCode, @Name = @SpotTitle, @FirstAirDate = @FirstAirDate",
                     new
@@ -41,8 +49,8 @@ namespace LinearConflictService.Logic
                         SpotCode = x.SpotCode,
                         SpotTitle = x.SpotTitle,
                         FirstAirDate = x.FirstAirDate
-                    }));
-                Console.WriteLine($"Upload Complete! {items.Count()} Spots have been uploaded");
+                    }));               
+                Log.Information("Distribution Server {0} has been successfully updated with {1} spots!", distServer.ServerFolder, items.Count());
             }
         }
     }

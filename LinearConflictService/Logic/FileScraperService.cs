@@ -24,16 +24,16 @@ namespace LinearConflictService.Logic
     {
         public static async Task<IEnumerable<SpotFileMapperModel>> GetServerDirectoryAsync(string distServerFolderPath)
         {
-            Log.Logger.Information("Looking for Distribution folder path {0}", distServerFolderPath);
+            Log.Verbose("Looking for Distribution folder path {0}", distServerFolderPath);
             if (string.IsNullOrEmpty(distServerFolderPath))
             {
-                Log.Logger.Error("Distribution path is null!");
+                Log.Error("Distribution path is null!");
                 return null;
             }
 
             if (!Directory.Exists(distServerFolderPath))
             {
-                Log.Logger.Error("Distribution path {0} cannot be found!", distServerFolderPath);
+                Log.Error("Distribution path {0} cannot be found!", distServerFolderPath);
                 return null;
             }
 
@@ -55,7 +55,7 @@ namespace LinearConflictService.Logic
         }
         public static async Task<List<SpotFileMapperModel>> ReadSpotsListAsync(string path, Encoding encoding)
         {
-            Log.Logger.Information("Attempting to read spots file {0}", path);
+            Log.Verbose("Attempting to read spots file {0}", path);
             Regex rgx = new Regex(@"^([A-Za-z0-9]+)\s+(?<title>.*)",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var spots = new List<SpotFileMapperModel>();
@@ -78,18 +78,18 @@ namespace LinearConflictService.Logic
                 }
                 catch (IndexOutOfRangeException e)
                 {
-                    Console.WriteLine(e.Source);
+                    Log.Fatal("Index Out of Range: {0}", e.Source);
                 }
                 catch (RegexParseException e)
                 {
-                    Console.WriteLine(e.Error);
+                    Log.Fatal("Regex Parse Error: {0}", e.Error);
                 }
                 catch (SystemException e)
                 {
-                    Console.WriteLine(e.InnerException);
+                    Log.Fatal("System Error: {0}", e.InnerException);
                 }
             }
-            Log.Logger.Information("Spots file {0} read successfully, returned {1} spots.", spots.Count());
+            Log.Verbose("Spots file {0} read successfully, returned {1} spots.",Path.GetFileName(path), spots.Count());
             return spots;
         }
     }

@@ -12,9 +12,9 @@ namespace LinearUpdateDashboard.Models
         /// <value>The name.</value>
         public string Name { get; set; }
 
-        /// <summary>Gets the headquarters.</summary>
+        /// <summary>Gets or sets the headquarters.</summary>
         /// <value>The headquarters.</value>
-        public List<Headquarters> Headquarters { get; } = new List<Headquarters>();
+        public List<Headquarters> Headquarters { get; set; } = new List<Headquarters>();
 
         /// <summary>Gets or sets the last updated.</summary>
         /// <value>The last updated.</value>
@@ -31,9 +31,9 @@ namespace LinearUpdateDashboard.Models
         /// <value>The name.</value>
         public string Name { get; set; }
 
-        /// <summary>Gets the markets.</summary>
+        /// <summary>Gets or sets the markets.</summary>
         /// <value>The markets.</value>
-        public List<Market> Markets { get; } = new List<Market>();
+        public List<Market> Markets { get; set; } = new List<Market>();
 
         /// <summary>Gets the distribution servers.</summary>
         /// <value>The distribution servers.</value>
@@ -57,6 +57,10 @@ namespace LinearUpdateDashboard.Models
         /// <summary>Gets or sets the server folder.</summary>
         /// <value>The server folder.</value>
         public string ServerFolder { get; set; }
+
+        /// <summary>Gets or sets the headquarters identifier.</summary>
+        /// <value>The headquarters identifier.</value>
+        public int HeadquartersId { get; set; }
 
         /// <summary>Gets or sets the headquarters.</summary>
         /// <value>The headquarters.</value>

@@ -1,0 +1,46 @@
+﻿@model LinearUpdateDashboard.ViewModels.Admin.HeadquartersListViewModel
+
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h1>Admin</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="mb-5">
+    <table class="table table-bordered text-nowrap w-100">
+        <thead>
+            <tr>
+                <th style="text-transform: uppercase;">
+                    Market Headquarters
+                </th>
+                <th style="text-transform: uppercase;">Last Modified</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var market in Model.MarketHeadquarters.Markets) {
+        <tr class="table-primary">
+            <th style="text-transform: uppercase;">
+                @market.Name
+            </th>
+            <th style="text-transform: uppercase;">@market.LastUpdated</th>
+            <th></th>
+        </tr>        
+    @foreach (var headquarters in market.Headquarters) {
+        <tr>
+            <td style="text-transform: uppercase;">@headquarters.Name</td>
+            <td>@headquarters.LastUpdated</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@headquarters.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@headquarters.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@headquarters.Id">Delete</a>
+            </td>
+        </tr>
+        }       
+    }
+    </tbody>
+    </table>
+</div>

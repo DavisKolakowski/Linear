@@ -1,0 +1,2 @@
+2022-05-23 21:00:43.994 -04:00 [INF] Application Starting
+2022-05-23 21:00:45.311 -04:00 [INF] Looking for Distribution folder path C:\temp\vaacdphl01\c$\encodelist\
