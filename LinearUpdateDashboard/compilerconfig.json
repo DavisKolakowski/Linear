@@ -1,6 +1,6 @@
 ﻿[
   {
-    "outputFile": "wwwroot/css/bootstrap.custom.css",
-    "inputFile": "wwwroot/css/bootstrap.custom.scss"
+    "outputFile": "wwwroot/lib/bootstrap/Styles.css",
+    "inputFile": "wwwroot/lib/bootstrap/Styles.scss"
   }
 ]

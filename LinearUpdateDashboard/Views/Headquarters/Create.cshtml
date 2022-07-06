@@ -13,12 +13,12 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="HeadquartersName" class="control-label"></label>
+                <label asp-for="HeadquartersName" class="control-label">Identity</label>
                 <input asp-for="HeadquartersName" class="form-control" />
                 <span asp-validation-for="Headquarters.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Headquarters.Markets" class="control-label"></label>
+                <label asp-for="Headquarters.Markets" class="control-label">Markets</label>
                 <select asp-for="SelectedMarketIds" 
                         asp-items="Model.MarketSelectListItems", class="form-control" style="text-transform: uppercase;">
                 </select>

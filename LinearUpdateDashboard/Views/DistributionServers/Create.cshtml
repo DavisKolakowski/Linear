@@ -6,20 +6,20 @@
 
 <h1>Create</h1>
 
-<h4>DistributionServer</h4>
+<h4>Distribution Server</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" asp-controller="DistributionServers">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DistributionServer.ServerIdentity" class="control-label">Server Path</label>
-                <input asp-for="DistributionServer.ServerIdentity" class="form-control" />
+                <label asp-for="ServerIdentity" class="control-label">Server Identity</label>
+                <input asp-for="ServerIdentity" class="form-control" />
                 <span asp-validation-for="DistributionServer.ServerIdentity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DistributionServer.ServerFolder" class="control-label">Server Path</label>
-                <input asp-for="DistributionServer.ServerFolder" class="form-control" />
+                <label asp-for="ServerFolder" class="control-label">Server Path</label>
+                <input asp-for="ServerFolder" placeholder="\\{server}\c$\encodelist\" class="form-control" />
                 <span asp-validation-for="DistributionServer.ServerFolder" class="text-danger"></span>
             </div>
             <div class="form-group">

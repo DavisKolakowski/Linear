@@ -182,7 +182,7 @@ namespace LinearUpdateDashboard.Controllers
 
                 hq.Markets.Clear();
 
-                hq.Name = viewModel.HeadquartersName;
+                hq.Name = viewModel.Headquarters.Name;
                 hq.LastUpdated = DateTime.Now;               
 
                 for (var i = 0; i < viewModel.SelectedMarketIds.Length; i++)
@@ -223,16 +223,13 @@ namespace LinearUpdateDashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Headquarters == null)
-            {
-                return Problem("Entity set 'LinearDbContext.Headquarters'  is null.");
-            }
-            var headquarters = await _context.Headquarters.FindAsync(id);
-            if (headquarters != null)
-            {
-                _context.Headquarters.Remove(headquarters);
-            }
-            
+            var headquarters = await _context.Headquarters
+             .Include(hq => hq.DistributionServers)
+             .Where(hq => hq.Id == id)
+             .SingleAsync();
+
+            _context.Headquarters.Remove(headquarters);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Admin));
         }

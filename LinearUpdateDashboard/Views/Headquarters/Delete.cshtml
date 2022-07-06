@@ -23,15 +23,6 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.LastUpdated)
         </dd>
-        <dt class = "col-sm-2">
-            DISTRIBUTION SERVERS
-        </dt>
-        <dd class = "col-sm-10">
-            @foreach(var dss in Model.DistributionServers)
-            {
-                <span>@dss.ServerIdentity</span>
-            }
-        </dd>
     </dl>
     
     <form asp-action="Delete">
