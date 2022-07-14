@@ -7,6 +7,12 @@
       "secretStore": "LocalSecretsFile",
       "type": "mssql.onprem",
       "connectionId": "ConnectionStrings:LinearTestSQLDatabase"
+    },
+    "mssql2": {
+      "secretStore": "LocalSecretsFile",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:LinearSQLDatabase",
+      "dynamicId": null
     }
   }
 }

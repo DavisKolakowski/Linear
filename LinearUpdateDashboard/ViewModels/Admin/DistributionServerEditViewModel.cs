@@ -12,7 +12,7 @@
 
         public int HeadquartersId { get; set; }
 
-        public int SelectedHeadquartersId { get; set; }
+        public int? SelectedHeadquartersId { get; set; }
 
         public IEnumerable<SelectListItem> HeadquartersSelectedListItems { get; set; } = Enumerable.Empty<SelectListItem>();      
     }

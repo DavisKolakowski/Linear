@@ -60,7 +60,7 @@ namespace LinearUpdateDashboard.Models
 
         /// <summary>Gets or sets the headquarters identifier.</summary>
         /// <value>The headquarters identifier.</value>
-        public int HeadquartersId { get; set; }
+        public int? HeadquartersId { get; set; }
 
         /// <summary>Gets or sets the headquarters.</summary>
         /// <value>The headquarters.</value>
@@ -73,6 +73,10 @@ namespace LinearUpdateDashboard.Models
         /// <summary>Gets or sets the last updated.</summary>
         /// <value>The last updated.</value>
         public DateTime? LastUpdated { get; set; }
+
+        /// <summary>Gets or sets the last successful spots update job</summary>
+        /// <value>The last import.</value>
+        public DateTime? LastSuccessfulDatabaseJob { get; set; }
     }
 
     public class DistributionServerSpot

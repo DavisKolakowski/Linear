@@ -1,5 +1,7 @@
 ﻿using Dapper;
 
+using Hangfire;
+
 using LinearWebService.Data;
 using LinearWebService.Models;
 
@@ -28,13 +30,15 @@ namespace LinearWebService.Services
 {
     public class DistributionServerEncodeListFileService
     {
-        public static async Task<IEnumerable<DistributionServerModel>> GetDistributionServerDirectoryPathsAsync(SqlConnection conn)
+        public static IEnumerable<DistributionServerModel> GetDistributionServerDirectoryPaths(string connString)
         {
-            var distServers = await conn.QueryAsync<DistributionServerModel>("SELECT * FROM dbo.DistributionServers WHERE ServerFolder IS NOT NULL");
+            var conn = new SqlConnection(connString);
+
+            var distServers = conn.Query<DistributionServerModel>("SELECT * FROM dbo.DistributionServers WHERE ServerFolder IS NOT NULL");           
 
             return distServers;
         }
-        public static async Task<IEnumerable<SpotFileMapperModel>> GetServerDirectorySpotsListAsync(string distServerFolderPath)
+        public static IEnumerable<SpotFileMapperModel> GetServerDirectorySpotsList(string distServerFolderPath)
         {
             Log.Verbose("Looking for Distribution folder path {0}", distServerFolderPath);
             if (string.IsNullOrEmpty(distServerFolderPath))
@@ -63,15 +67,15 @@ namespace LinearWebService.Services
             string path = Path.GetFullPath(file.ToString());
 
             //string path = Path.GetFullPath(file.FullName);           
-            return await ReadSpotsListAsync(path, Encoding.UTF8);
+            return ReadSpotsList(path, Encoding.UTF8);
         }
-        public static async Task<List<SpotFileMapperModel>> ReadSpotsListAsync(string path, Encoding encoding)
+        public static List<SpotFileMapperModel> ReadSpotsList(string path, Encoding encoding)
         {
             Log.Verbose("Attempting to read spots file {0}", path);
             Regex rgx = new Regex(@"^([A-Za-z0-9]+)\s+(?<title>.*)",
                 RegexOptions.Compiled | RegexOptions.IgnoreCase);
             var spots = new List<SpotFileMapperModel>();
-            var lines = await System.IO.File.ReadAllLinesAsync(path, encoding);
+            var lines = System.IO.File.ReadAllLines(path, encoding);
             for (int i = 0; i < lines.Length; i++)
             {
                 try
