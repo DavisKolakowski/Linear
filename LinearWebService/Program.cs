@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.AspNetCore;
 using Hangfire.SqlServer;
 
 using LinearWebService.Data;
@@ -12,6 +13,11 @@ using Serilog;
 using System.Data;
 using System.Diagnostics;
 using LinearWebService.Models;
+using Hangfire.Client;
+using Hangfire.Server;
+using Hangfire.States;
+using Hangfire.Common;
+using Microsoft.EntityFrameworkCore;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -20,13 +26,29 @@ Log.Logger = new LoggerConfiguration()
 Log.Information("Starting up");
 try
 {
-
     var builder = WebApplication.CreateBuilder(args);
 
     // Add services to the container.
-    var connString = builder.Configuration.GetConnectionString("LinearTestSQLDatabase");
-    var conn = new SqlConnection(connString);
-    await conn.OpenAsync();
+    builder.Configuration.AddJsonFile("appsettings.json");
+
+    builder.Services.AddScoped<LogEventsFormatModel>();
+    builder.Services.AddScoped<DapperContext>();
+
+    var connString = builder.Configuration.GetConnectionString("LinearSQLDatabase");
+
+    builder.Services.AddLogging(logging =>
+    {
+        logging.ClearProviders();
+        logging.AddConsole();
+        logging.AddSerilog();
+    });
+
+    builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+    {
+        loggerConfiguration.MinimumLevel.Debug();
+        loggerConfiguration.WriteTo.Console();
+        loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
+    });
 
     builder.Services.AddHangfireServer();
     builder.Services.AddHangfire(configuration => configuration
@@ -43,25 +65,8 @@ try
             })
             .UseSerilogLogProvider()
     );
-
+    
     builder.Services.AddControllers();
-
-    builder.Services.AddScoped<DapperContext>();
-    builder.Services.AddScoped<LogEventsFormatModel>();
-
-    builder.Services.AddLogging(logging =>
-    {
-        logging.ClearProviders();
-        logging.AddConsole();
-        logging.AddSerilog();
-    });
-
-    builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
-    {
-        loggerConfiguration.MinimumLevel.Debug();
-        loggerConfiguration.WriteTo.Console();
-        loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
-    });
 
     var app = builder.Build();
     // Configure the HTTP request pipeline.
@@ -78,7 +83,7 @@ try
         endpoints.MapControllers();
     });
 
-    RecurringJob.AddOrUpdate<LinearDatabaseSpotsTableService>("UpdateLinearDbSpots", m => LinearDatabaseSpotsTableService.RunUpdateLinearDatabase(connString), "*/5 * * * *");
+    RecurringJob.AddOrUpdate<LinearDatabaseSpotsTableService>("UpdateLinearDatabase", x => x.RunUpdateLinearDatabase(), "*/2 * * * *");
 
     app.Run();
 

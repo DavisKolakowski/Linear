@@ -272,3 +272,5 @@ namespace LinearUpdateDashboard.Controllers
         }
     }
 }
+
+

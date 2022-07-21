@@ -33,13 +33,14 @@ namespace LinearWebService.Services
         public static IEnumerable<DistributionServerModel> GetDistributionServerDirectoryPaths(string connString)
         {
             var conn = new SqlConnection(connString);
-
-            var distServers = conn.Query<DistributionServerModel>("SELECT * FROM dbo.DistributionServers WHERE ServerFolder IS NOT NULL");           
+            var distServers = conn.Query<DistributionServerModel>("SELECT * FROM dbo.DistributionServers WHERE ServerFolder IS NOT NULL");
 
             return distServers;
         }
-        public static IEnumerable<SpotFileMapperModel> GetServerDirectorySpotsList(string distServerFolderPath)
+        public static IEnumerable<SpotFileMapperModel> GetServerDirectorySpotsList(string distServerFolderPath, string connString)
         {
+            var conn = new SqlConnection(connString);
+
             Log.Verbose("Looking for Distribution folder path {0}", distServerFolderPath);
             if (string.IsNullOrEmpty(distServerFolderPath))
             {
@@ -64,6 +65,15 @@ namespace LinearWebService.Services
             {
                 return null;
             }
+
+            conn.Execute($"UPDATE dbo.DistributionServers SET SpotsLogFileName = @SpotsLogFileName, SpotsLogLastWriteTime = @SpotsLogLastWriteTime  WHERE ServerFolder = @ServerFolder",
+                new
+                {
+                    ServerFolder = distServerFolderPath,
+                    SpotsLogFileName = file.FullName,
+                    SpotsLogLastWriteTime = file.LastWriteTime,
+                });
+
             string path = Path.GetFullPath(file.ToString());
 
             //string path = Path.GetFullPath(file.FullName);           

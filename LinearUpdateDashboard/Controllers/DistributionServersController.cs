@@ -25,18 +25,49 @@ namespace LinearUpdateDashboard.Controllers
             _logger = logger;
         }
 
-        // GET: DistributionServers
+        //// GET: DistributionServers
+        //[HttpGet("DistributionServers/Admin")]
+        //public async Task<IActionResult> Admin()
+        //{
+        //    DistributionServersListViewModel model = new DistributionServersListViewModel()
+        //    {
+        //        DistributionServers = await GetDistributionServersListAsync()
+        //    };
+
+        //    return model != null ? 
+        //                View(model) :
+        //                Problem("Entity set 'LinearDbContext.DistributionServers'  is null.");
+        //}
+
+        // GET: Headquarters
         [HttpGet("DistributionServers/Admin")]
         public async Task<IActionResult> Admin()
         {
-            DistributionServersListViewModel model = new DistributionServersListViewModel()
+            var distributionServers = await this.GetDistributionServersListAsync();
+
+            var headquartersDistributionServers = new HeadquartersDistributionServers();
+            foreach (var distributionServer in distributionServers)
             {
-                DistributionServers = await GetDistributionServersListAsync()
+                headquartersDistributionServers.HeadquartersId = distributionServer.HeadquartersId;
+                headquartersDistributionServers.DistributionServers.Add(distributionServer);
+            }
+            var model = new DistributionServersListViewModel()
+            {
+                HeadquartersDistributionServers = headquartersDistributionServers,
             };
 
-            return model != null ? 
-                        View(model) :
-                        Problem("Entity set 'LinearDbContext.DistributionServers'  is null.");
+            return _context.Headquarters != null ?
+                            View(model) :
+                            Problem("Entity set 'LinearDbContext.Headquarters'  is null.");
+        }
+
+        public async Task<List<Headquarters>> GetHeadquartersListAsync()
+        {
+            var markets = await _context.Headquarters
+                    .Include(hq => hq.DistributionServers)
+                .Distinct()
+                .ToListAsync();
+            return markets;
         }
 
         public async Task<List<DistributionServer>> GetDistributionServersListAsync()

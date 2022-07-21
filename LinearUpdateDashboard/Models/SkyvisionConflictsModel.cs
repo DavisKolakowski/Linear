@@ -77,6 +77,14 @@ namespace LinearUpdateDashboard.Models
         /// <summary>Gets or sets the last successful spots update job</summary>
         /// <value>The last import.</value>
         public DateTime? LastSuccessfulDatabaseJob { get; set; }
+
+        /// <summary>Gets or sets the The file's name being read</summary>
+        /// <value>The file's name being read.</value>
+        public string? SpotsLogFileName { get; set; } = string.Empty;
+
+        /// <summary>Gets or sets the The file's last modified time</summary>
+        /// <value>The file's last modified time.</value>
+        public DateTime? SpotsLogLastWriteTime { get; set; }
     }
 
     public class DistributionServerSpot

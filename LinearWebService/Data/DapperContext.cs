@@ -12,6 +12,6 @@ namespace LinearWebService.Data
             _configuration = configuration;
         }
         public IDbConnection Connection()
-            => new SqlConnection(_configuration.GetConnectionString("LinearTestSQLDatabase"));
+            => new SqlConnection(_configuration.GetConnectionString("LinearSQLDatabase"));
     }
 }

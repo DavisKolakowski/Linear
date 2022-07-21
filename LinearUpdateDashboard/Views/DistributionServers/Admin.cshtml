@@ -4,50 +4,142 @@
     ViewData["Title"] = "Admin";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/lib/vendor/datatables/datatables.min.css"/>    
+    <link rel="stylesheet" href="~/lib/vendor/datatables/dist/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/autofill/css/autoFill.bootstrap5.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/buttons/css/buttons.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/colreorder/css/colReorder.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/datetime/css/dataTables.dateTime.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/fixedcolumns/css/fixedColumns.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/fixedheader/css/fixedHeader.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/keytable/css/keyTable.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/responsive/css/responsive.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/rowgroup/css/rowGroup.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/rowreorder/css/rowReorder.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/scroller/css/scroller.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/searchbuilder/css/searchBuilder.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/searchpanes/css/searchPanes.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/select/css/select.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="~/lib/vendor/datatables/extensions/staterestore/css/stateRestore.bootstrap5.min.css"/>
+}
+
+@section Scripts {
+    <script src="~/lib/vendor/datatables/datatables.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/jszip/jszip.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/pdfmake/pdfmake.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/pdfmake/vfs_fonts.js"></script>
+    <script src="~/lib/vendor/datatables/dist/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/vendor/datatables/dist/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/autofill/js/dataTables.autoFill.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/autofill/js/autoFill.bootstrap5.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/buttons/js/buttons.bootstrap5.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/buttons/js/buttons.html5.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/buttons/js/buttons.print.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/colreorder/js/dataTables.colReorder.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/datetime/js/dataTables.dateTime.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/responsive/js/responsive.bootstrap5.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/rowgroup/js/dataTables.rowGroup.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/rowreorder/js/dataTables.rowReorder.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/scroller/js/dataTables.scroller.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/searchbuilder/js/dataTables.searchBuilder.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/searchbuilder/js/searchBuilder.bootstrap5.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/searchpanes/js/dataTables.searchPanes.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/searchpanes/js/searchPanes.bootstrap5.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/select/js/dataTables.select.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/staterestore/js/dataTables.stateRestore.min.js"></script>
+    <script src="~/lib/vendor/datatables/extensions/staterestore/js/stateRestore.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+                var table = $('#DistributionServersDT').DataTable( {
+                    dom: "f",
+                    responsive: true,
+                    searching: false,
+                    paging: false,
+                    columnDefs: [
+                        { responsivePriority: 1, targets: 0 },
+                        { responsivePriority: 2, targets: -1 }
+                    ],
+                    order: [[2, 'asc']],
+                    rowGroup: {
+                        dataSrc: 2
+                    }
+                });
+           });
+    </script>
+}
+
 <h1>Distribution Server Admin</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead style="text-transform: uppercase;">
-        <tr>
-            <th>
-                Headquarters
-            </th>
-            <th>
-                Server Name
-            </th>
-            <th>
-                Server Path
-            </th>
-            <th>
-                Last Modified
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.DistributionServers) {
-        <tr>
-            <td style="text-transform: uppercase;">
-                @item.Headquarters.Name
-            </td>
-            <td>
-                @item.ServerIdentity
-            </td>
-            <td>
-                @item.ServerFolder
-            </td>
-            <td>
-                @item.LastUpdated
-            </td>
-            <td style="text-transform: uppercase;">
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div id="datatable" class="mb-5">
+    <table id="DistributionServersDT" class="table table-bordered text-nowrap w-100">
+        <thead style="text-transform: uppercase;">
+            <tr class="table-primary">
+                <th>
+                    Server Name
+                </th>
+                <th>
+                    Server Path
+                </th>
+                <th>
+                    Headquarters
+                </th>
+                <th>
+                    Last Modified
+                </th>
+                <th>
+                    Last Database Update
+                </th>
+                <th>
+                    Conflict Log
+                </th>
+                <th>
+                    Log Last Update
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.HeadquartersDistributionServers.DistributionServers) {
+            <tr>
+                <td>
+                    @item.ServerIdentity
+                </td>
+                <td>
+                    @item.ServerFolder
+                </td>
+                <td>
+                    @item.Headquarters.Name
+                </td>
+                <td>
+                    @item.LastUpdated
+                </td>
+                <td>
+                    @item.LastSuccessfulDatabaseJob
+                </td>
+                <td>
+                    @item.SpotsLogFileName
+                </td>
+                <td>
+                    @item.SpotsLogLastWriteTime
+                </td>
+                <td style="text-transform: uppercase;">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

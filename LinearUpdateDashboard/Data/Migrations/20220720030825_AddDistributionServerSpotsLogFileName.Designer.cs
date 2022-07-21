@@ -4,6 +4,7 @@ using LinearUpdateDashboard.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinearUpdateDashboard.Data.Migrations
 {
     [DbContext(typeof(LinearDbContext))]
-    partial class LinearDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220720030825_AddDistributionServerSpotsLogFileName")]
+    partial class AddDistributionServerSpotsLogFileName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,9 +64,6 @@ namespace LinearUpdateDashboard.Data.Migrations
 
                     b.Property<string>("SpotsLogFileName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("SpotsLogLastWriteTime")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
