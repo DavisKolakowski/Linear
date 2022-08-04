@@ -34,7 +34,7 @@ try
     builder.Services.AddScoped<LogEventsFormatModel>();
     builder.Services.AddScoped<DapperContext>();
 
-    var connString = builder.Configuration.GetConnectionString("LinearSQLDatabase");
+    var connString = builder.Configuration.GetConnectionString("LinearTestSQLDatabase");
 
     builder.Services.AddLogging(logging =>
     {

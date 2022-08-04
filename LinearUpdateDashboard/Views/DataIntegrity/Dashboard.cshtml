@@ -1,0 +1,36 @@
+﻿@model LinearUpdateDashboard.ViewModels.DataIntegrityViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+
+<div class="mb-5">
+    <table class="table table-bordered text-nowrap w-100">
+        <thead>
+            <tr>
+                <th style="text-transform: uppercase;">
+                    Market Headquarters
+                </th>
+                <th style="text-transform: uppercase;">Last Modified</th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var market in Model.MarketHeadquartersDistributionServers.Markets) {
+        <tr class="table-primary">
+            <th style="text-transform: uppercase;">
+                @market.Name
+            </th>
+            <th style="text-transform: uppercase;">@market.LastUpdated</th>
+        </tr>        
+    @foreach (var headquarters in market.Headquarters) {
+        <tr>
+            <td style="text-transform: uppercase;">@headquarters.Name</td>
+            <td>@headquarters.LastUpdated</td>
+        </tr>
+        }       
+    }
+    </tbody>
+    </table>
+</div>

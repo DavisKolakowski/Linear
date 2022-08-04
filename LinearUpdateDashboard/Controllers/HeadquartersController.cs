@@ -32,7 +32,7 @@ namespace LinearUpdateDashboard.Controllers
             
             var markets = await this.GetMarketsListAsync();
 
-            var marketHqs = new MarketHeadquarters();
+            var marketHqs = new MarketHeadquartersModel();
             foreach (var market in markets)
             {
                 marketHqs.MarketId = market.Id;

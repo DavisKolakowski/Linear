@@ -25,27 +25,13 @@ namespace LinearUpdateDashboard.Controllers
             _logger = logger;
         }
 
-        //// GET: DistributionServers
-        //[HttpGet("DistributionServers/Admin")]
-        //public async Task<IActionResult> Admin()
-        //{
-        //    DistributionServersListViewModel model = new DistributionServersListViewModel()
-        //    {
-        //        DistributionServers = await GetDistributionServersListAsync()
-        //    };
-
-        //    return model != null ? 
-        //                View(model) :
-        //                Problem("Entity set 'LinearDbContext.DistributionServers'  is null.");
-        //}
-
-        // GET: Headquarters
+        // GET: DistributionServers
         [HttpGet("DistributionServers/Admin")]
         public async Task<IActionResult> Admin()
         {
             var distributionServers = await this.GetDistributionServersListAsync();
 
-            var headquartersDistributionServers = new HeadquartersDistributionServers();
+            var headquartersDistributionServers = new HeadquartersDistributionServersModel();
             foreach (var distributionServer in distributionServers)
             {
                 headquartersDistributionServers.HeadquartersId = distributionServer.HeadquartersId;
