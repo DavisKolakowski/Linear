@@ -25,25 +25,23 @@ namespace LinearUpdateDashboard.Controllers
         [HttpGet("DataIntegrity/Dashboard")]
         public async Task<IActionResult> Dashboard()
         {
-            var markets = await this.GetMarketsListAsync();
+            var distributionServers = await this.GetDistributionServersListAsync();
 
-            var marketHqsDss = new MarketHeadquartersDistributionServersModel();
+            var hqsDss = new HeadquartersDistributionServersModel();
+            var countDict = new Dictionary<int, int>();
 
-            foreach (var market in markets)
+            foreach (var distributionServer in distributionServers)
             {
-                marketHqsDss.MarketId = market.Id;
-                marketHqsDss.Markets.Add(market);
-
-                foreach (var headquarters in market.Headquarters)
-                {
-                    marketHqsDss.MarketHeadquartersId = headquarters.Id;
-                    marketHqsDss.DistributionServers = headquarters.DistributionServers;
-                }
+                hqsDss.HeadquartersId = distributionServer.HeadquartersId;
+                hqsDss.DistributionServers.Add(distributionServer);
+                var spots = await this.GetSpotsByDistributionServerIdentity(distributionServer.ServerIdentity);
+                countDict.Add(distributionServer.Id, spots.Count());
             }
 
             var model = new DataIntegrityViewModel()
             {
-                MarketHeadquartersDistributionServers = marketHqsDss,
+                HeadquartersDistributionServers = hqsDss,
+                DistributionServerSpotCount = countDict,
             };
 
             return _context.Headquarters != null ?
@@ -51,14 +49,25 @@ namespace LinearUpdateDashboard.Controllers
                             Problem("Entity set 'LinearDbContext.Headquarters'  is null.");
         }
 
-        public async Task<List<Market>> GetMarketsListAsync()
+        public async Task<List<DistributionServer>> GetDistributionServersListAsync()
         {
-            var markets = await _context.Markets
-                    .Include(m => m.Headquarters)
-                        .ThenInclude(hq => hq.DistributionServers)
-                .Distinct()
+            var distributionServers = await _context.DistributionServers
+                .Include(ds => ds.Headquarters)
+                    .ThenInclude(hq => hq.Markets)
                 .ToListAsync();
-            return markets;
+            return distributionServers;
+        }
+
+        public async Task<List<Spot>> GetSpotsByDistributionServerIdentity(string serverIdentity)
+        {
+            this._logger.LogInformation("Retrieving spots for {0}", serverIdentity);
+            return await this._context.DistributionServers
+                .Where(ds => ds.ServerIdentity == serverIdentity)
+                        .Include(ds => ds.DistributionServerSpots)
+                            .ThenInclude(dss => dss.Spot)
+                    .SelectMany(ds => ds.DistributionServerSpots)
+                    .Select(dss => dss.Spot)
+                    .ToListAsync();
         }
     }
 }
